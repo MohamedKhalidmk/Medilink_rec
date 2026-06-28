@@ -16,6 +16,8 @@ DATABASE_PATH = Path(os.getenv("DATABASE_PATH", str(DEFAULT_DB_PATH)))
 if not DATABASE_PATH.is_absolute():
     DATABASE_PATH = PROJECT_ROOT / DATABASE_PATH
 
+DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+
 MODELS_DIR = PROJECT_ROOT / "models"
 MODELS_DIR.mkdir(exist_ok=True)
 

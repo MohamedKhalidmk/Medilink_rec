@@ -7,8 +7,12 @@ from pydantic import BaseModel, Field
 from .cold_start import ensure_user
 from .hybrid_recommender import recommend_doctors, log_interaction
 from .train_autorec import train_autorec
+from .init_db import initialize_database
 
 app = FastAPI(title="Vezeeta Alexandria AutoRec")
+
+# Initialize SQLite database from CSVs if it doesn't exist
+initialize_database()
 
 
 class UserRequest(BaseModel):
