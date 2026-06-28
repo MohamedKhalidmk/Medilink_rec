@@ -1,17 +1,16 @@
 from __future__ import annotations
-from veez_autorec_agent.vezeeta_live_booking import get_live_availability, book_selected_slot
-from veez_autorec_agent.booking_automation import BookingRequest, book_on_vezeeta
+from app.veez_autorec_agent.vezeeta_live_booking import get_live_availability, book_selected_slot
+from app.veez_autorec_agent.booking_automation import BookingRequest, book_on_vezeeta
 from typing import Optional
 
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-from .claude_agent import run_claude_agent
 from .cold_start import ensure_user
 from .hybrid_recommender import recommend_doctors, log_interaction
 from .train_autorec import train_autorec
 
-app = FastAPI(title="Vezeeta Alexandria AutoRec + Claude/OpenClue Agent")
+app = FastAPI(title="Vezeeta Alexandria AutoRec")
 
 
 class UserRequest(BaseModel):
@@ -53,10 +52,6 @@ class BookingStartRequest(BaseModel):
     dry_run: bool = True
     user_confirmed_final: bool = False
 
-class AgentRequest(BaseModel):
-    message: str
-    user_id: Optional[str] = None
-
 
 class TrainRequest(BaseModel):
     include_synthetic: bool = True
@@ -88,11 +83,6 @@ def interaction(req: InteractionRequest):
 @app.post("/train-autorec")
 def train(req: TrainRequest):
     return train_autorec(**req.model_dump())
-
-
-@app.post("/agent")
-def agent(req: AgentRequest):
-    return {"response": run_claude_agent(req.message, user_id=req.user_id)}
 
 
 
